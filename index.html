@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OptiCompress - Next-Gen Image Optimizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --accent: #06b6d4;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding: 20px; }
+        .wrapper { max-width: 960px; margin: 0 auto; }
+        header { text-align: center; padding: 40px 20px; border-bottom: 1px solid var(--border); margin-bottom: 30px; }
+        header h1 { font-size: 2.8rem; font-weight: 800; background: linear-gradient(135deg, #818cf8, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        header p { color: var(--text-muted); font-size: 1.1rem; }
+        .ad-space { background: rgba(255, 255, 255, 0.03); border: 1px dashed var(--border); border-radius: 12px; padding: 15px; text-align: center; color: var(--text-muted); font-size: 0.85rem; letter-spacing: 1px; margin: 25px 0; }
+        .main-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); text-align: center; }
+        .upload-zone { border: 2px dashed #6366f1; background: rgba(99, 102, 241, 0.05); border-radius: 16px; padding: 50px 20px; cursor: pointer; transition: all 0.3s ease; }
+        .upload-zone:hover { border-color: var(--accent); background: rgba(6, 182, 212, 0.08); transform: translateY(-2px); }
+        .upload-zone svg { width: 64px; height: 64px; fill: none; stroke: var(--accent); stroke-width: 2; margin-bottom: 15px; }
+        .upload-zone h3 { font-size: 1.4rem; margin-bottom: 8px; }
+        .upload-zone p { color: var(--text-muted); font-size: 0.95rem; }
+        input[type="file"] { display: none; }
+        .controls-area { margin-top: 30px; display: none; text-align: left; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 14px; }
+        .slider-header { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 12px; }
+        input[type="range"] { width: 100%; height: 8px; border-radius: 4px; background: var(--border); accent-color: var(--accent); cursor: pointer; }
+        .btn-action { width: 100%; margin-top: 20px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: 0.3s; }
+        .btn-action:hover { opacity: 0.9; transform: scale(1.01); }
+        .result-container { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media(max-width: 600px) { .result-container { grid-template-columns: 1fr; } }
+        .res-box { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 14px; border: 1px solid var(--border); }
+        .res-box img { max-width: 100%; height: auto; border-radius: 8px; margin-top: 10px; max-height: 200px; object-fit: contain; }
+        .guide-section { margin-top: 50px; line-height: 1.8; color: var(--text-muted); }
+        .guide-section h2 { color: var(--text-main); font-size: 1.8rem; margin: 30px 0 15px; position: relative; padding-left: 15px; }
+        .guide-section h2::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 80%; background: var(--accent); border-radius: 2px; }
+        .guide-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .step-card { background: var(--card-bg); padding: 25px; border-radius: 14px; border: 1px solid var(--border); }
+        .step-number { font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <h1>OptiCompress HD</h1>
+            <p>Next-Generation Browser-Based Image Compression</p>
+        </header>
+
+        <div class="ad-space"><!-- ADS_BANNER_TOP --> [ ADVERTISEMENT AREA - LEADERBOARD ] </div>
+
+        <div class="main-card">
+            <div class="upload-zone" onclick="document.getElementById('imgFile').click()">
+                <svg viewBox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <h3>Drop your image here or browse</h3>
+                <p>Supports High-Res JPG, PNG, and WebP formats</p>
+                <input type="file" id="imgFile" accept="image/*">
+            </div>
+
+            <div class="controls-area" id="controls">
+                <div class="slider-header">
+                    <span>Target Compression Quality</span>
+                    <span id="qLabel" style="color: var(--accent);">80%</span>
+                </div>
+                <input type="range" id="quality" min="15" max="95" value="80" oninput="document.getElementById('qLabel').innerText = this.value + '%'">
+                <button class="btn-action" onclick="processCompress()">Optimize Image Now</button>
+            </div>
+
+            <div class="result-container" id="resArea"></div>
+        </div>
+
+        <div class="ad-space"><!-- ADS_BANNER_MID --> [ ADVERTISEMENT AREA - IN-ARTICLE ] </div>
+
+        <article class="guide-section">
+            <h2>How It Works</h2>
+            <div class="guide-steps">
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <h4 style="color:white; margin-bottom:8px;">Upload Image</h4>
+                    <p>Select any PNG, JPG, or WEBP file from your device. Files stay 100% private in your browser.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <h4 style="color:white; margin-bottom:8px;">Adjust Quality</h4>
+                    <p>Set your desired compression ratio to balance file size reduction with visual clarity.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <h4 style="color:white; margin-bottom:8px;">Instant Save</h4>
+                    <p>Download your optimized image instantly with up to 85% reduced file size.</p>
+                </div>
+            </div>
+
+            <h2>Why Choose OptiCompress?</h2>
+            <p>Our client-side compression algorithm eliminates server load times, granting instantaneous performance while maintaining complete privacy for your sensitive digital media.</p>
+        </article>
+
+        <div class="ad-space"><!-- ADS_BANNER_BOTTOM --> [ ADVERTISEMENT AREA - FOOTER ] </div>
+    </div>
+
+    <script>
+        const imgFile = document.getElementById('imgFile');
+        const controls = document.getElementById('controls');
+        const resArea = document.getElementById('resArea');
+        let selectedFile = null;
+
+        imgFile.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                selectedFile = e.target.files[0];
+                controls.style.display = 'block';
+            }
+        });
+
+        function processCompress() {
+            if (!selectedFile) return;
+            const q = document.getElementById('quality').value / 100;
+            const reader = new FileReader();
+            reader.readAsDataURL(selectedFile);
+            reader.onload = (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob((blob) => {
+                        const compUrl = URL.createObjectURL(blob);
+                        resArea.innerHTML = `
+                            <div class="res-box">
+                                <h4 style="color:var(--text-muted)">Original File</h4>
+                                <div style="font-size:1.2rem; font-weight:700; margin:5px 0;">${(selectedFile.size/1024).toFixed(1)} KB</div>
+                                <img src="${e.target.result}">
+                            </div>
+                            <div class="res-box" style="border-color:var(--accent);">
+                                <h4 style="color:var(--accent)">Optimized Result</h4>
+                                <div style="font-size:1.2rem; font-weight:700; margin:5px 0; color:#4ade80;">${(blob.size/1024).toFixed(1)} KB</div>
+                                <img src="${compUrl}"><br>
+                                <a href="${compUrl}" download="opti_${selectedFile.name}" class="btn-action" style="display:inline-block; text-decoration:none; margin-top:15px; padding:10px;">Download File</a>
+                            </div>
+                        `;
+                    }, 'image/jpeg', q);
+                };
+            };
+        }
+    </script>
+</body>
+</html>
+
